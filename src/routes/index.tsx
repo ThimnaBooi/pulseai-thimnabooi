@@ -46,7 +46,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Live sentiment analysis of Western Cape news with municipality, category and trend insights.",
+          "AI-powered sentiment intelligence for Western Cape news: live sentiment analysis, municipality insights, trends and trending topics.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

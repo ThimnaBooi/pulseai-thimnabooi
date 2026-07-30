@@ -82,15 +82,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "PulseAI — Western Cape News Sentiment Intelligence" },
       {
         name: "description",
-        content: "AI-powered sentiment intelligence for Western Cape news.",
+        content: "AI-powered sentiment intelligence for Western Cape news: live sentiment analysis, municipality insights, trends and trending topics.",
       },
-      { property: "og:title", content: "PulseAI" },
+      { property: "og:title", content: "PulseAI — Western Cape News Sentiment Intelligence" },
       {
         property: "og:description",
-        content: "AI-powered sentiment intelligence for Western Cape news.",
+        content: "AI-powered sentiment intelligence for Western Cape news: live sentiment analysis, municipality insights, trends and trending topics.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "PulseAI — Western Cape News Sentiment Intelligence" },
+      { name: "twitter:description", content: "AI-powered sentiment intelligence for Western Cape news: live sentiment analysis, municipality insights, trends and trending topics." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/3dd9f1da-5847-4ac7-be67-edc5c7aa87ac" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/3dd9f1da-5847-4ac7-be67-edc5c7aa87ac" },
     ],
     links: [
       {
