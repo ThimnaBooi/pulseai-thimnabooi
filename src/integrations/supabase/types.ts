@@ -14,7 +14,93 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      articles: {
+        Row: {
+          article: string
+          author: string | null
+          category: string
+          confidence: number
+          created_at: string
+          headline: string
+          id: string
+          image_url: string | null
+          keywords: string[]
+          municipality: string
+          published_at: string
+          sentiment: string
+          source: string
+          summary: string | null
+          topic: string | null
+          url: string
+        }
+        Insert: {
+          article?: string
+          author?: string | null
+          category?: string
+          confidence?: number
+          created_at?: string
+          headline: string
+          id?: string
+          image_url?: string | null
+          keywords?: string[]
+          municipality?: string
+          published_at?: string
+          sentiment?: string
+          source?: string
+          summary?: string | null
+          topic?: string | null
+          url: string
+        }
+        Update: {
+          article?: string
+          author?: string | null
+          category?: string
+          confidence?: number
+          created_at?: string
+          headline?: string
+          id?: string
+          image_url?: string | null
+          keywords?: string[]
+          municipality?: string
+          published_at?: string
+          sentiment?: string
+          source?: string
+          summary?: string | null
+          topic?: string | null
+          url?: string
+        }
+        Relationships: []
+      }
+      ingestion_runs: {
+        Row: {
+          error: string | null
+          fetched_count: number
+          finished_at: string | null
+          id: string
+          inserted_count: number
+          started_at: string
+          status: string
+        }
+        Insert: {
+          error?: string | null
+          fetched_count?: number
+          finished_at?: string | null
+          id?: string
+          inserted_count?: number
+          started_at?: string
+          status?: string
+        }
+        Update: {
+          error?: string | null
+          fetched_count?: number
+          finished_at?: string | null
+          id?: string
+          inserted_count?: number
+          started_at?: string
+          status?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
