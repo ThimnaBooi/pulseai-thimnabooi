@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { ExternalLink, Search } from "lucide-react";
 import type { Article } from "@/lib/pulse-shared";
+import { filterByRange, type RangeKey } from "@/lib/pulse-stats";
 import { SectionCard } from "./Panels";
 
 const PAGE_SIZE = 12;
