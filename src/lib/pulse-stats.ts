@@ -4,10 +4,9 @@
  */
 import { countKeywords, pct, sentimentScore, type Article } from "./pulse-shared";
 
-export type RangeKey = "7" | "30" | "90" | "all";
+export type RangeKey = "7" | "30" | "60";
 
 export function filterByRange(articles: Article[], range: RangeKey): Article[] {
-  if (range === "all") return articles;
   const cutoff = Date.now() - Number(range) * 86_400_000;
   return articles.filter((a) => new Date(a.published_at).getTime() >= cutoff);
 }
