@@ -61,8 +61,7 @@ export const Route = createFileRoute("/")({
 const RANGES: { key: RangeKey; label: string }[] = [
   { key: "7", label: "Last 7 days" },
   { key: "30", label: "Last 30 days" },
-  { key: "90", label: "Last 90 days" },
-  { key: "all", label: "All time" },
+  { key: "60", label: "Last 60 days" },
 ];
 
 function Skeleton({ className = "" }: { className?: string }) {

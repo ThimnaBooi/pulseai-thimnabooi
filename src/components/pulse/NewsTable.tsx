@@ -9,6 +9,8 @@ function unique(values: string[]) {
   return [...new Set(values)].sort((a, b) => a.localeCompare(b));
 }
 
+const today = new Date().toISOString().slice(0, 10);
+
 const selectClass =
   "rounded-lg border border-input bg-card px-3 py-2 text-sm text-foreground outline-none transition-colors focus:border-ring";
 
@@ -136,6 +138,7 @@ export function NewsTable({ articles }: { articles: Article[] }) {
         <input
           type="date"
           aria-label="From date"
+          max={to || today}
           className={selectClass}
           value={from}
           onChange={(e) => update(setFrom)(e.target.value)}
@@ -143,6 +146,8 @@ export function NewsTable({ articles }: { articles: Article[] }) {
         <input
           type="date"
           aria-label="To date"
+          min={from || undefined}
+          max={today}
           className={selectClass}
           value={to}
           onChange={(e) => update(setTo)(e.target.value)}
