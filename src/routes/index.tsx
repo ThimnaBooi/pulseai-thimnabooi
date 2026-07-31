@@ -226,7 +226,7 @@ function Dashboard() {
             <StoryCards title="Top Negative Stories" articles={negativeStories} />
           </div>
 
-          <NewsTable articles={scoped} />
+          <NewsTable articles={articles} range={range} />
         </div>
       )}
     </main>
