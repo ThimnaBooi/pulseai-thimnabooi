@@ -16,7 +16,7 @@ const selectClass =
   "rounded-lg border border-input bg-card px-3 py-2 text-sm text-foreground outline-none transition-colors focus:border-ring";
 
 /** Searchable, filterable, paginated table of analysed articles. */
-export function NewsTable({ articles }: { articles: Article[] }) {
+export function NewsTable({ articles, range }: { articles: Article[]; range: RangeKey }) {
   const [query, setQuery] = useState("");
   const [sentiment, setSentiment] = useState("all");
   const [municipality, setMunicipality] = useState("all");
