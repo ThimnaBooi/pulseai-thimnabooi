@@ -1,7 +1,9 @@
 import { useMemo, useState } from "react";
-import { ExternalLink, Search } from "lucide-react";
+import { Download, ExternalLink, FileJson, FileSpreadsheet, FileText, Search } from "lucide-react";
+import { toast } from "sonner";
 import type { Article } from "@/lib/pulse-shared";
 import { filterByRange, type RangeKey } from "@/lib/pulse-stats";
+import { exportCsv, exportJson, exportPdf } from "@/lib/pulse-export";
 import { SectionCard } from "./Panels";
 
 const PAGE_SIZE = 12;
@@ -15,6 +17,9 @@ const today = new Date().toISOString().slice(0, 10);
 const selectClass =
   "rounded-lg border border-input bg-card px-3 py-2 text-sm text-foreground outline-none transition-colors focus:border-ring";
 
+const exportButtonClass =
+  "inline-flex items-center gap-1.5 rounded-lg border border-input bg-card px-3 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-muted disabled:opacity-40";
+
 /** Searchable, filterable, paginated table of analysed articles. */
 export function NewsTable({ articles, range }: { articles: Article[]; range: RangeKey }) {
   const [query, setQuery] = useState("");
@@ -25,6 +30,7 @@ export function NewsTable({ articles, range }: { articles: Article[]; range: Ran
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [page, setPage] = useState(0);
+  const [exporting, setExporting] = useState(false);
 
   const options = useMemo(
     () => ({
@@ -36,14 +42,19 @@ export function NewsTable({ articles, range }: { articles: Article[]; range: Ran
   );
 
   const dateFiltered = useMemo(() => {
+    // Strict date mode: when any date is picked, only articles published within
+    // that exact day (or from–to span) are shown and the range buttons are ignored.
     if (!from && !to) return filterByRange(articles, range);
-    const start = from || to;
-    const end = to || from;
+    const start = (from || to).slice(0, 10);
+    const end = (to || from).slice(0, 10);
+    const lo = start <= end ? start : end;
+    const hi = start <= end ? end : start;
     return articles.filter((a) => {
       const day = a.published_at.slice(0, 10);
-      return day >= start && day <= end;
+      return day >= lo && day <= hi;
     });
   }, [articles, range, from, to]);
+
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -78,11 +89,49 @@ export function NewsTable({ articles, range }: { articles: Article[]; range: Ran
     };
   }
 
+  const dateLabel = from || to ? (from && to && from !== to ? `${from} to ${to}` : from || to) : null;
+  const scopeLabel = dateLabel ? `Published ${dateLabel}` : `Last ${range} days`;
+  const fileBase = `pulseai-news-${dateLabel ? dateLabel.replace(/ to /, "_") : `last-${range}-days`}`;
+
+  async function handleExport(kind: "pdf" | "csv" | "json") {
+    if (filtered.length === 0) {
+      toast.error("No articles to export for the selected filters.");
+      return;
+    }
+    try {
+      setExporting(true);
+      if (kind === "csv") exportCsv(filtered, fileBase);
+      else if (kind === "json") exportJson(filtered, fileBase);
+      else await exportPdf(filtered, fileBase, scopeLabel);
+      toast.success(`Report exported as ${kind.toUpperCase()}.`);
+    } catch {
+      toast.error("Export failed. Please try again.");
+    } finally {
+      setExporting(false);
+    }
+  }
+
   return (
     <SectionCard
       title="News Table"
-      description={`${filtered.length} article${filtered.length === 1 ? "" : "s"} match your filters.`}
+      description={`${filtered.length} article${filtered.length === 1 ? "" : "s"} match your filters — ${scopeLabel}.`}
     >
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        <span className="mr-1 inline-flex items-center gap-1.5 text-sm text-muted-foreground">
+          <Download className="h-4 w-4" /> Download report:
+        </span>
+        <button type="button" disabled={exporting} onClick={() => handleExport("pdf")} className={exportButtonClass}>
+          <FileText className="h-4 w-4" /> PDF
+        </button>
+        <button type="button" disabled={exporting} onClick={() => handleExport("csv")} className={exportButtonClass}>
+          <FileSpreadsheet className="h-4 w-4" /> CSV / Excel
+        </button>
+        <button type="button" disabled={exporting} onClick={() => handleExport("json")} className={exportButtonClass}>
+          <FileJson className="h-4 w-4" /> JSON
+        </button>
+      </div>
+
+
       <div className="mb-4 grid gap-2 md:grid-cols-2 xl:grid-cols-4">
         <label className="relative md:col-span-2 xl:col-span-2">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
