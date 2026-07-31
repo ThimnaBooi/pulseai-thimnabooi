@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { ExternalLink, Search } from "lucide-react";
 import type { Article } from "@/lib/pulse-shared";
+import { filterByRange, type RangeKey } from "@/lib/pulse-stats";
 import { SectionCard } from "./Panels";
 
 const PAGE_SIZE = 12;
@@ -15,7 +16,7 @@ const selectClass =
   "rounded-lg border border-input bg-card px-3 py-2 text-sm text-foreground outline-none transition-colors focus:border-ring";
 
 /** Searchable, filterable, paginated table of analysed articles. */
-export function NewsTable({ articles }: { articles: Article[] }) {
+export function NewsTable({ articles, range }: { articles: Article[]; range: RangeKey }) {
   const [query, setQuery] = useState("");
   const [sentiment, setSentiment] = useState("all");
   const [municipality, setMunicipality] = useState("all");
@@ -34,15 +35,23 @@ export function NewsTable({ articles }: { articles: Article[] }) {
     [articles],
   );
 
+  const dateFiltered = useMemo(() => {
+    if (!from && !to) return filterByRange(articles, range);
+    const start = from || to;
+    const end = to || from;
+    return articles.filter((a) => {
+      const day = a.published_at.slice(0, 10);
+      return day >= start && day <= end;
+    });
+  }, [articles, range, from, to]);
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return articles.filter((a) => {
+    return dateFiltered.filter((a) => {
       if (sentiment !== "all" && a.sentiment !== sentiment) return false;
       if (municipality !== "all" && a.municipality !== municipality) return false;
       if (category !== "all" && a.category !== category) return false;
       if (source !== "all" && a.source !== source) return false;
-      if (from && a.published_at.slice(0, 10) < from) return false;
-      if (to && a.published_at.slice(0, 10) > to) return false;
       if (!q) return true;
       return [
         a.headline,
@@ -56,7 +65,7 @@ export function NewsTable({ articles }: { articles: Article[] }) {
         .toLowerCase()
         .includes(q);
     });
-  }, [articles, query, sentiment, municipality, category, source, from, to]);
+  }, [dateFiltered, query, sentiment, municipality, category, source]);
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const current = Math.min(page, pageCount - 1);
@@ -152,7 +161,21 @@ export function NewsTable({ articles }: { articles: Article[] }) {
           value={to}
           onChange={(e) => update(setTo)(e.target.value)}
         />
+        {from || to ? (
+          <button
+            type="button"
+            onClick={() => {
+              setFrom("");
+              setTo("");
+              setPage(0);
+            }}
+            className="rounded-lg bg-muted px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-secondary-foreground"
+          >
+            Clear dates
+          </button>
+        ) : null}
       </div>
+
 
       <div className="overflow-x-auto">
         <table className="w-full min-w-[860px] text-sm">
