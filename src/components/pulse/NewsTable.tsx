@@ -89,11 +89,49 @@ export function NewsTable({ articles, range }: { articles: Article[]; range: Ran
     };
   }
 
+  const dateLabel = from || to ? (from && to && from !== to ? `${from} to ${to}` : from || to) : null;
+  const scopeLabel = dateLabel ? `Published ${dateLabel}` : `Last ${range} days`;
+  const fileBase = `pulseai-news-${dateLabel ? dateLabel.replace(/ to /, "_") : `last-${range}-days`}`;
+
+  async function handleExport(kind: "pdf" | "csv" | "json") {
+    if (filtered.length === 0) {
+      toast.error("No articles to export for the selected filters.");
+      return;
+    }
+    try {
+      setExporting(true);
+      if (kind === "csv") exportCsv(filtered, fileBase);
+      else if (kind === "json") exportJson(filtered, fileBase);
+      else await exportPdf(filtered, fileBase, scopeLabel);
+      toast.success(`Report exported as ${kind.toUpperCase()}.`);
+    } catch {
+      toast.error("Export failed. Please try again.");
+    } finally {
+      setExporting(false);
+    }
+  }
+
   return (
     <SectionCard
       title="News Table"
-      description={`${filtered.length} article${filtered.length === 1 ? "" : "s"} match your filters.`}
+      description={`${filtered.length} article${filtered.length === 1 ? "" : "s"} match your filters — ${scopeLabel}.`}
     >
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        <span className="mr-1 inline-flex items-center gap-1.5 text-sm text-muted-foreground">
+          <Download className="h-4 w-4" /> Download report:
+        </span>
+        <button type="button" disabled={exporting} onClick={() => handleExport("pdf")} className={exportButtonClass}>
+          <FileText className="h-4 w-4" /> PDF
+        </button>
+        <button type="button" disabled={exporting} onClick={() => handleExport("csv")} className={exportButtonClass}>
+          <FileSpreadsheet className="h-4 w-4" /> CSV / Excel
+        </button>
+        <button type="button" disabled={exporting} onClick={() => handleExport("json")} className={exportButtonClass}>
+          <FileJson className="h-4 w-4" /> JSON
+        </button>
+      </div>
+
+
       <div className="mb-4 grid gap-2 md:grid-cols-2 xl:grid-cols-4">
         <label className="relative md:col-span-2 xl:col-span-2">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
