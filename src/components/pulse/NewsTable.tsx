@@ -35,15 +35,23 @@ export function NewsTable({ articles, range }: { articles: Article[]; range: Ran
     [articles],
   );
 
+  const dateFiltered = useMemo(() => {
+    if (!from && !to) return filterByRange(articles, range);
+    const start = from || to;
+    const end = to || from;
+    return articles.filter((a) => {
+      const day = a.published_at.slice(0, 10);
+      return day >= start && day <= end;
+    });
+  }, [articles, range, from, to]);
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return articles.filter((a) => {
+    return dateFiltered.filter((a) => {
       if (sentiment !== "all" && a.sentiment !== sentiment) return false;
       if (municipality !== "all" && a.municipality !== municipality) return false;
       if (category !== "all" && a.category !== category) return false;
       if (source !== "all" && a.source !== source) return false;
-      if (from && a.published_at.slice(0, 10) < from) return false;
-      if (to && a.published_at.slice(0, 10) > to) return false;
       if (!q) return true;
       return [
         a.headline,
@@ -57,7 +65,7 @@ export function NewsTable({ articles, range }: { articles: Article[]; range: Ran
         .toLowerCase()
         .includes(q);
     });
-  }, [articles, query, sentiment, municipality, category, source, from, to]);
+  }, [dateFiltered, query, sentiment, municipality, category, source]);
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const current = Math.min(page, pageCount - 1);
