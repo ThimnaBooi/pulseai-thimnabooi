@@ -1,7 +1,9 @@
 import { useMemo, useState } from "react";
-import { ExternalLink, Search } from "lucide-react";
+import { Download, ExternalLink, FileJson, FileSpreadsheet, FileText, Search } from "lucide-react";
+import { toast } from "sonner";
 import type { Article } from "@/lib/pulse-shared";
 import { filterByRange, type RangeKey } from "@/lib/pulse-stats";
+import { exportCsv, exportJson, exportPdf } from "@/lib/pulse-export";
 import { SectionCard } from "./Panels";
 
 const PAGE_SIZE = 12;
@@ -15,6 +17,9 @@ const today = new Date().toISOString().slice(0, 10);
 const selectClass =
   "rounded-lg border border-input bg-card px-3 py-2 text-sm text-foreground outline-none transition-colors focus:border-ring";
 
+const exportButtonClass =
+  "inline-flex items-center gap-1.5 rounded-lg border border-input bg-card px-3 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-muted disabled:opacity-40";
+
 /** Searchable, filterable, paginated table of analysed articles. */
 export function NewsTable({ articles, range }: { articles: Article[]; range: RangeKey }) {
   const [query, setQuery] = useState("");
@@ -25,6 +30,7 @@ export function NewsTable({ articles, range }: { articles: Article[]; range: Ran
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [page, setPage] = useState(0);
+  const [exporting, setExporting] = useState(false);
 
   const options = useMemo(
     () => ({
@@ -36,14 +42,19 @@ export function NewsTable({ articles, range }: { articles: Article[]; range: Ran
   );
 
   const dateFiltered = useMemo(() => {
+    // Strict date mode: when any date is picked, only articles published within
+    // that exact day (or from–to span) are shown and the range buttons are ignored.
     if (!from && !to) return filterByRange(articles, range);
-    const start = from || to;
-    const end = to || from;
+    const start = (from || to).slice(0, 10);
+    const end = (to || from).slice(0, 10);
+    const lo = start <= end ? start : end;
+    const hi = start <= end ? end : start;
     return articles.filter((a) => {
       const day = a.published_at.slice(0, 10);
-      return day >= start && day <= end;
+      return day >= lo && day <= hi;
     });
   }, [articles, range, from, to]);
+
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
