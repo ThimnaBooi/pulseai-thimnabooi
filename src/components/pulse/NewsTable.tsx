@@ -12,8 +12,6 @@ function unique(values: string[]) {
   return [...new Set(values)].sort((a, b) => a.localeCompare(b));
 }
 
-const today = new Date().toISOString().slice(0, 10);
-
 const selectClass =
   "rounded-lg border border-input bg-card px-3 py-2 text-sm text-foreground outline-none transition-colors focus:border-ring";
 
@@ -27,8 +25,6 @@ export function NewsTable({ articles, range }: { articles: Article[]; range: Ran
   const [municipality, setMunicipality] = useState("all");
   const [category, setCategory] = useState("all");
   const [source, setSource] = useState("all");
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
   const [page, setPage] = useState(0);
   const [exporting, setExporting] = useState(false);
 
@@ -41,19 +37,8 @@ export function NewsTable({ articles, range }: { articles: Article[]; range: Ran
     [articles],
   );
 
-  const dateFiltered = useMemo(() => {
-    // Strict date mode: when any date is picked, only articles published within
-    // that exact day (or from–to span) are shown and the range buttons are ignored.
-    if (!from && !to) return filterByRange(articles, range);
-    const start = (from || to).slice(0, 10);
-    const end = (to || from).slice(0, 10);
-    const lo = start <= end ? start : end;
-    const hi = start <= end ? end : start;
-    return articles.filter((a) => {
-      const day = a.published_at.slice(0, 10);
-      return day >= lo && day <= hi;
-    });
-  }, [articles, range, from, to]);
+  const dateFiltered = useMemo(() => filterByRange(articles, range), [articles, range]);
+
 
 
   const filtered = useMemo(() => {
@@ -89,9 +74,9 @@ export function NewsTable({ articles, range }: { articles: Article[]; range: Ran
     };
   }
 
-  const dateLabel = from || to ? (from && to && from !== to ? `${from} to ${to}` : from || to) : null;
-  const scopeLabel = dateLabel ? `Published ${dateLabel}` : `Last ${range} days`;
-  const fileBase = `pulseai-news-${dateLabel ? dateLabel.replace(/ to /, "_") : `last-${range}-days`}`;
+  const scopeLabel = `Last ${range} days`;
+  const fileBase = `pulseai-news-last-${range}-days`;
+
 
   async function handleExport(kind: "pdf" | "csv" | "json") {
     if (filtered.length === 0) {
@@ -193,36 +178,6 @@ export function NewsTable({ articles, range }: { articles: Article[]; range: Ran
             </option>
           ))}
         </select>
-        <input
-          type="date"
-          aria-label="From date"
-          max={to || today}
-          className={selectClass}
-          value={from}
-          onChange={(e) => update(setFrom)(e.target.value)}
-        />
-        <input
-          type="date"
-          aria-label="To date"
-          min={from || undefined}
-          max={today}
-          className={selectClass}
-          value={to}
-          onChange={(e) => update(setTo)(e.target.value)}
-        />
-        {from || to ? (
-          <button
-            type="button"
-            onClick={() => {
-              setFrom("");
-              setTo("");
-              setPage(0);
-            }}
-            className="rounded-lg bg-muted px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-secondary-foreground"
-          >
-            Clear dates
-          </button>
-        ) : null}
       </div>
 
 
