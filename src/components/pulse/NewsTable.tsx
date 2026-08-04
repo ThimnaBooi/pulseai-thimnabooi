@@ -180,36 +180,6 @@ export function NewsTable({ articles, range }: { articles: Article[]; range: Ran
             </option>
           ))}
         </select>
-        <input
-          type="date"
-          aria-label="From date"
-          max={to || today}
-          className={selectClass}
-          value={from}
-          onChange={(e) => update(setFrom)(e.target.value)}
-        />
-        <input
-          type="date"
-          aria-label="To date"
-          min={from || undefined}
-          max={today}
-          className={selectClass}
-          value={to}
-          onChange={(e) => update(setTo)(e.target.value)}
-        />
-        {from || to ? (
-          <button
-            type="button"
-            onClick={() => {
-              setFrom("");
-              setTo("");
-              setPage(0);
-            }}
-            className="rounded-lg bg-muted px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-secondary-foreground"
-          >
-            Clear dates
-          </button>
-        ) : null}
       </div>
 
 
