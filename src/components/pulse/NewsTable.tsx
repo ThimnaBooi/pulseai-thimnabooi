@@ -27,8 +27,6 @@ export function NewsTable({ articles, range }: { articles: Article[]; range: Ran
   const [municipality, setMunicipality] = useState("all");
   const [category, setCategory] = useState("all");
   const [source, setSource] = useState("all");
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
   const [page, setPage] = useState(0);
   const [exporting, setExporting] = useState(false);
 
@@ -41,19 +39,8 @@ export function NewsTable({ articles, range }: { articles: Article[]; range: Ran
     [articles],
   );
 
-  const dateFiltered = useMemo(() => {
-    // Strict date mode: when any date is picked, only articles published within
-    // that exact day (or from–to span) are shown and the range buttons are ignored.
-    if (!from && !to) return filterByRange(articles, range);
-    const start = (from || to).slice(0, 10);
-    const end = (to || from).slice(0, 10);
-    const lo = start <= end ? start : end;
-    const hi = start <= end ? end : start;
-    return articles.filter((a) => {
-      const day = a.published_at.slice(0, 10);
-      return day >= lo && day <= hi;
-    });
-  }, [articles, range, from, to]);
+  const dateFiltered = useMemo(() => filterByRange(articles, range), [articles, range]);
+
 
 
   const filtered = useMemo(() => {
