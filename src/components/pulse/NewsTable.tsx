@@ -76,9 +76,9 @@ export function NewsTable({ articles, range }: { articles: Article[]; range: Ran
     };
   }
 
-  const dateLabel = from || to ? (from && to && from !== to ? `${from} to ${to}` : from || to) : null;
-  const scopeLabel = dateLabel ? `Published ${dateLabel}` : `Last ${range} days`;
-  const fileBase = `pulseai-news-${dateLabel ? dateLabel.replace(/ to /, "_") : `last-${range}-days`}`;
+  const scopeLabel = `Last ${range} days`;
+  const fileBase = `pulseai-news-last-${range}-days`;
+
 
   async function handleExport(kind: "pdf" | "csv" | "json") {
     if (filtered.length === 0) {
