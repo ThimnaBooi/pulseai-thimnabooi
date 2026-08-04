@@ -222,7 +222,7 @@ export const PLACE_TO_MUNICIPALITY: Record<string, string> = {
   "beaufort west": "Beaufort West",
   laingsburg: "Laingsburg",
   "prince albert": "Prince Albert",
-  leeu-gamka: "Prince Albert",
+  "leeu-gamka": "Prince Albert",
   merweville: "Beaufort West",
 
   // West Coast district
