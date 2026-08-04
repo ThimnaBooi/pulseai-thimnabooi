@@ -284,20 +284,105 @@ export const STOP_WORDS = new Set(
 );
 
 /**
+ * Place names that are also common person names or foreign places. These only
+ * count when the article also carries a South African / Western Cape signal,
+ * which keeps stories like "George Clooney" out of the George municipality.
+ */
+const AMBIGUOUS_PLACES = new Set([
+  "george",
+  "worcester",
+  "wellington",
+  "prince albert",
+  "heidelberg",
+  "napier",
+  "darling",
+  "strand",
+  "langa",
+  "ashton",
+  "montagu",
+  "robertson",
+  "caledon",
+  "aurora",
+  "stanford",
+  "wilderness",
+  "observatory",
+  "claremont",
+  "richmond",
+  "delft",
+  "riebeek",
+  "clanwilliam",
+  "saldanha",
+  "paternoster",
+  "greyton",
+  "barrydale",
+  "sedgefield",
+  "kurland",
+  "zoar",
+  "athlone",
+  "goodwood",
+  "milnerton",
+  "philippi",
+  "nature's valley",
+  "still bay",
+  "table view",
+  "atlantis",
+  "bitou",
+]);
+
+/** Regional signals that confirm an ambiguous place name is the WC town. */
+const REGION_SIGNALS = [
+  "western cape",
+  "south africa",
+  "south african",
+  "garden route",
+  "cape winelands",
+  "overberg",
+  "west coast district",
+  "central karoo",
+  "karoo",
+  "wes-kaap",
+  "eskom",
+  "municipality",
+  "municipal",
+  "premier alan winde",
+  "alan winde",
+  "cape town",
+  "rand",
+  "saps",
+];
+
+/**
  * Place names sorted longest-first so specific towns win over broader names
- * (e.g. "cape agulhas" is matched before "cape town" style partial overlaps).
+ * (e.g. "cape agulhas" is matched before shorter overlapping names).
  */
 const SORTED_PLACES: [string, string][] = Object.entries(PLACE_TO_MUNICIPALITY)
   .filter(([place]) => place !== "western cape")
   .sort((a, b) => b[0].length - a[0].length);
 
+function hasWord(haystack: string, place: string): boolean {
+  const escaped = place.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`\\b${escaped}\\b`).test(haystack);
+}
+
 /** Detect which Western Cape municipality an article refers to, or null if none. */
 export function detectMunicipality(text: string): string | null {
   const haystack = text.toLowerCase();
+  const hasRegionSignal = REGION_SIGNALS.some((signal) => haystack.includes(signal));
+
+  // Unambiguous town names first — they identify the municipality on their own.
   for (const [place, municipality] of SORTED_PLACES) {
-    const pattern = new RegExp(`\\b${place.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`);
-    if (pattern.test(haystack)) return municipality;
+    if (AMBIGUOUS_PLACES.has(place)) continue;
+    if (hasWord(haystack, place)) return municipality;
   }
+
+  // Ambiguous names need regional context to count.
+  if (hasRegionSignal) {
+    for (const [place, municipality] of SORTED_PLACES) {
+      if (!AMBIGUOUS_PLACES.has(place)) continue;
+      if (hasWord(haystack, place)) return municipality;
+    }
+  }
+
   return haystack.includes("western cape") ? "Western Cape" : null;
 }
 
