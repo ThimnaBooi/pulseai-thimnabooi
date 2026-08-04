@@ -12,9 +12,15 @@ const GNEWS_ENDPOINT = "https://gnews.io/api/v4/search";
 const QUERIES = [
   '"Western Cape"',
   '"Cape Town"',
-  "Stellenbosch OR Paarl OR Worcester",
-  "George OR Knysna OR Hermanus OR \"Mossel Bay\"",
-  "Khayelitsha OR Gugulethu OR \"Mitchells Plain\" OR Bellville",
+  "Khayelitsha OR Gugulethu OR \"Mitchells Plain\" OR Bellville OR Delft",
+  "Stellenbosch OR Franschhoek OR Paarl OR Wellington",
+  "Worcester OR Ceres OR Tulbagh OR Robertson OR Montagu",
+  "George OR Knysna OR \"Mossel Bay\" OR \"Plettenberg Bay\" OR Oudtshoorn",
+  "Hermanus OR Gansbaai OR Grabouw OR Caledon OR Bredasdorp OR Swellendam",
+  "Riversdale OR Ladismith OR Calitzdorp OR \"Still Bay\"",
+  "Malmesbury OR Vredenburg OR Langebaan OR Saldanha OR Piketberg",
+  "Citrusdal OR Clanwilliam OR Vredendal OR Vanrhynsdorp",
+  "\"Beaufort West\" OR Laingsburg OR \"Prince Albert\"",
 ];
 
 export interface RawArticle {

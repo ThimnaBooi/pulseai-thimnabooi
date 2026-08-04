@@ -36,39 +36,226 @@ export interface IngestionRun {
 export const WESTERN_CAPE_PLACES = [
   "Western Cape",
   "Cape Town",
-  "Gugulethu",
-  "Khayelitsha",
-  "Mitchells Plain",
-  "Bellville",
   "Stellenbosch",
   "Paarl",
-  "George",
+  "Wellington",
+  "Franschhoek",
   "Worcester",
-  "Knysna",
-  "Mossel Bay",
+  "Ceres",
+  "Tulbagh",
+  "Robertson",
+  "Montagu",
+  "Ashton",
+  "Bonnievale",
+  "Swellendam",
+  "Caledon",
+  "Grabouw",
   "Hermanus",
-  "Somerset West",
-  "Saldanha Bay",
+  "Gansbaai",
+  "Bredasdorp",
+  "Napier",
+  "Struisbaai",
+  "Riversdale",
+  "Heidelberg",
+  "Still Bay",
+  "Mossel Bay",
+  "George",
+  "Oudtshoorn",
+  "De Rust",
+  "Calitzdorp",
+  "Ladismith",
+  "Knysna",
+  "Sedgefield",
+  "Plettenberg Bay",
+  "Bitou",
   "Beaufort West",
+  "Laingsburg",
+  "Prince Albert",
+  "Malmesbury",
+  "Darling",
+  "Moorreesburg",
+  "Saldanha Bay",
+  "Vredenburg",
+  "Langebaan",
+  "St Helena Bay",
+  "Piketberg",
+  "Velddrif",
+  "Citrusdal",
+  "Clanwilliam",
+  "Vredendal",
+  "Vanrhynsdorp",
+  "Lutzville",
+  "Doringbaai",
+  "Somerset West",
+  "Khayelitsha",
+  "Gugulethu",
+  "Mitchells Plain",
+  "Bellville",
+  "Cape Agulhas",
+  "Hessequa",
+  "Kannaland",
+  "Witzenberg",
+  "Langeberg",
+  "Theewaterskloof",
+  "Overstrand",
+  "Drakenstein",
+  "Breede Valley",
+  "Bergrivier",
+  "Swartland",
+  "Cederberg",
+  "Matzikama",
+  "Prince Albert",
 ] as const;
 
-/** Sub-places that roll up into a parent municipality for reporting. */
+/** Sub-places and towns that roll up into a parent municipality for reporting. */
 export const PLACE_TO_MUNICIPALITY: Record<string, string> = {
+  // City of Cape Town
   "cape town": "Cape Town",
-  gugulethu: "Cape Town",
+  "city of cape town": "Cape Town",
   khayelitsha: "Cape Town",
+  gugulethu: "Cape Town",
   "mitchells plain": "Cape Town",
+  "mitchell's plain": "Cape Town",
+  langa: "Cape Town",
+  nyanga: "Cape Town",
+  delft: "Cape Town",
   bellville: "Cape Town",
   "somerset west": "Cape Town",
+  goodwood: "Cape Town",
+  "sea point": "Cape Town",
+  "green point": "Cape Town",
+  observatory: "Cape Town",
+  woodstock: "Cape Town",
+  claremont: "Cape Town",
+  wynberg: "Cape Town",
+  athlone: "Cape Town",
+  "hout bay": "Cape Town",
+  "simon's town": "Cape Town",
+  simonstown: "Cape Town",
+  muizenberg: "Cape Town",
+  "kraaifontein": "Cape Town",
+  brackenfell: "Cape Town",
+  durbanville: "Cape Town",
+  parow: "Cape Town",
+  milnerton: "Cape Town",
+  "table view": "Cape Town",
+  atlantis: "Cape Town",
+  "philippi": "Cape Town",
+  "strand": "Cape Town",
+  gordonsbay: "Cape Town",
+  "gordon's bay": "Cape Town",
+  "cape flats": "Cape Town",
+
+  // Cape Winelands district
   stellenbosch: "Stellenbosch",
+  franschhoek: "Stellenbosch",
+  "kayamandi": "Stellenbosch",
   paarl: "Drakenstein (Paarl)",
-  george: "George",
+  wellington: "Drakenstein (Paarl)",
+  drakenstein: "Drakenstein (Paarl)",
   worcester: "Breede Valley (Worcester)",
-  knysna: "Knysna",
-  "mossel bay": "Mossel Bay",
+  "breede valley": "Breede Valley (Worcester)",
+  "de doorns": "Breede Valley (Worcester)",
+  rawsonville: "Breede Valley (Worcester)",
+  ceres: "Witzenberg (Ceres)",
+  witzenberg: "Witzenberg (Ceres)",
+  tulbagh: "Witzenberg (Ceres)",
+  wolseley: "Witzenberg (Ceres)",
+  "op-die-berg": "Witzenberg (Ceres)",
+  robertson: "Langeberg (Robertson)",
+  langeberg: "Langeberg (Robertson)",
+  montagu: "Langeberg (Robertson)",
+  ashton: "Langeberg (Robertson)",
+  bonnievale: "Langeberg (Robertson)",
+  mcgregor: "Langeberg (Robertson)",
+
+  // Overberg district
   hermanus: "Overstrand (Hermanus)",
-  "saldanha bay": "Saldanha Bay",
+  overstrand: "Overstrand (Hermanus)",
+  gansbaai: "Overstrand (Hermanus)",
+  stanford: "Overstrand (Hermanus)",
+  kleinmond: "Overstrand (Hermanus)",
+  "betty's bay": "Overstrand (Hermanus)",
+  caledon: "Theewaterskloof (Caledon)",
+  theewaterskloof: "Theewaterskloof (Caledon)",
+  grabouw: "Theewaterskloof (Caledon)",
+  villiersdorp: "Theewaterskloof (Caledon)",
+  greyton: "Theewaterskloof (Caledon)",
+  riviersonderend: "Theewaterskloof (Caledon)",
+  bredasdorp: "Cape Agulhas (Bredasdorp)",
+  "cape agulhas": "Cape Agulhas (Bredasdorp)",
+  napier: "Cape Agulhas (Bredasdorp)",
+  struisbaai: "Cape Agulhas (Bredasdorp)",
+  "l'agulhas": "Cape Agulhas (Bredasdorp)",
+  arniston: "Cape Agulhas (Bredasdorp)",
+  swellendam: "Swellendam",
+  barrydale: "Swellendam",
+  suurbraak: "Swellendam",
+
+  // Garden Route district
+  george: "George",
+  wilderness: "George",
+  "uniondale": "George",
+  "mossel bay": "Mossel Bay",
+  hartenbos: "Mossel Bay",
+  knysna: "Knysna",
+  sedgefield: "Knysna",
+  "plettenberg bay": "Bitou (Plettenberg Bay)",
+  bitou: "Bitou (Plettenberg Bay)",
+  "nature's valley": "Bitou (Plettenberg Bay)",
+  kurland: "Bitou (Plettenberg Bay)",
+  oudtshoorn: "Oudtshoorn",
+  "de rust": "Oudtshoorn",
+  dysselsdorp: "Oudtshoorn",
+  riversdale: "Hessequa (Riversdale)",
+  hessequa: "Hessequa (Riversdale)",
+  "still bay": "Hessequa (Riversdale)",
+  stilbaai: "Hessequa (Riversdale)",
+  heidelberg: "Hessequa (Riversdale)",
+  albertinia: "Hessequa (Riversdale)",
+  ladismith: "Kannaland (Ladismith)",
+  kannaland: "Kannaland (Ladismith)",
+  calitzdorp: "Kannaland (Ladismith)",
+  zoar: "Kannaland (Ladismith)",
+
+  // Central Karoo district
   "beaufort west": "Beaufort West",
+  laingsburg: "Laingsburg",
+  "prince albert": "Prince Albert",
+  "leeu-gamka": "Prince Albert",
+  merweville: "Beaufort West",
+
+  // West Coast district
+  malmesbury: "Swartland (Malmesbury)",
+  swartland: "Swartland (Malmesbury)",
+  darling: "Swartland (Malmesbury)",
+  moorreesburg: "Swartland (Malmesbury)",
+  riebeek: "Swartland (Malmesbury)",
+  "saldanha bay": "Saldanha Bay",
+  saldanha: "Saldanha Bay",
+  vredenburg: "Saldanha Bay",
+  langebaan: "Saldanha Bay",
+  "st helena bay": "Saldanha Bay",
+  paternoster: "Saldanha Bay",
+  piketberg: "Bergrivier (Piketberg)",
+  bergrivier: "Bergrivier (Piketberg)",
+  velddrif: "Bergrivier (Piketberg)",
+  velddrift: "Bergrivier (Piketberg)",
+  porterville: "Bergrivier (Piketberg)",
+  aurora: "Bergrivier (Piketberg)",
+  clanwilliam: "Cederberg (Clanwilliam)",
+  cederberg: "Cederberg (Clanwilliam)",
+  citrusdal: "Cederberg (Clanwilliam)",
+  lambertsbaai: "Cederberg (Clanwilliam)",
+  "lamberts bay": "Cederberg (Clanwilliam)",
+  vredendal: "Matzikama (Vredendal)",
+  matzikama: "Matzikama (Vredendal)",
+  vanrhynsdorp: "Matzikama (Vredendal)",
+  lutzville: "Matzikama (Vredendal)",
+  klawer: "Matzikama (Vredendal)",
+  doringbaai: "Matzikama (Vredendal)",
+
+  // Fallback
   "western cape": "Western Cape",
 };
 
@@ -96,18 +283,106 @@ export const STOP_WORDS = new Set(
   ),
 );
 
+/**
+ * Place names that are also common person names or foreign places. These only
+ * count when the article also carries a South African / Western Cape signal,
+ * which keeps stories like "George Clooney" out of the George municipality.
+ */
+const AMBIGUOUS_PLACES = new Set([
+  "george",
+  "worcester",
+  "wellington",
+  "prince albert",
+  "heidelberg",
+  "napier",
+  "darling",
+  "strand",
+  "langa",
+  "ashton",
+  "montagu",
+  "robertson",
+  "caledon",
+  "aurora",
+  "stanford",
+  "wilderness",
+  "observatory",
+  "claremont",
+  "richmond",
+  "delft",
+  "riebeek",
+  "clanwilliam",
+  "saldanha",
+  "paternoster",
+  "greyton",
+  "barrydale",
+  "sedgefield",
+  "kurland",
+  "zoar",
+  "athlone",
+  "goodwood",
+  "milnerton",
+  "philippi",
+  "nature's valley",
+  "still bay",
+  "table view",
+  "atlantis",
+  "bitou",
+]);
+
+/** Regional signals that confirm an ambiguous place name is the WC town. */
+const REGION_SIGNALS = [
+  "western cape",
+  "south africa",
+  "south african",
+  "garden route",
+  "cape winelands",
+  "overberg",
+  "west coast district",
+  "central karoo",
+  "karoo",
+  "wes-kaap",
+  "eskom",
+  "municipality",
+  "municipal",
+  "premier alan winde",
+  "alan winde",
+  "cape town",
+  "rand",
+  "saps",
+];
+
+/**
+ * Place names sorted longest-first so specific towns win over broader names
+ * (e.g. "cape agulhas" is matched before shorter overlapping names).
+ */
+const SORTED_PLACES: [string, string][] = Object.entries(PLACE_TO_MUNICIPALITY)
+  .filter(([place]) => place !== "western cape")
+  .sort((a, b) => b[0].length - a[0].length);
+
+function hasWord(haystack: string, place: string): boolean {
+  const escaped = place.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`\\b${escaped}\\b`).test(haystack);
+}
+
 /** Detect which Western Cape municipality an article refers to, or null if none. */
 export function detectMunicipality(text: string): string | null {
   const haystack = text.toLowerCase();
-  let match: string | null = null;
-  for (const [place, municipality] of Object.entries(PLACE_TO_MUNICIPALITY)) {
-    if (place === "western cape") continue;
-    if (haystack.includes(place)) {
-      match = municipality;
-      break;
+  const hasRegionSignal = REGION_SIGNALS.some((signal) => haystack.includes(signal));
+
+  // Unambiguous town names first — they identify the municipality on their own.
+  for (const [place, municipality] of SORTED_PLACES) {
+    if (AMBIGUOUS_PLACES.has(place)) continue;
+    if (hasWord(haystack, place)) return municipality;
+  }
+
+  // Ambiguous names need regional context to count.
+  if (hasRegionSignal) {
+    for (const [place, municipality] of SORTED_PLACES) {
+      if (!AMBIGUOUS_PLACES.has(place)) continue;
+      if (hasWord(haystack, place)) return municipality;
     }
   }
-  if (match) return match;
+
   return haystack.includes("western cape") ? "Western Cape" : null;
 }
 
